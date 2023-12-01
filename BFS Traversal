@@ -1,0 +1,191 @@
+BFS Path Finder
+This repository contains C++ code for finding the path between two nodes in a graph using Breadth-First Search (BFS).
+
+Overview
+The code defines a function getPath that takes the number of vertices (V), the number of edges (E), vectors a and b representing edges, and two nodes v1 and v2 as input.
+The function uses BFS to traverse the graph and find the path from node v1 to node v2.
+
+Psuedo code 
+   FUNCTION getPath(V, E, a, b, v1, v2)
+    Create an adjacency list to represent the graph
+    FOR i from 0 to E - 1
+        Add edge a[i] to b[i] in the adjacency list
+        Add edge b[i] to a[i] in the adjacency list
+    Initialize an empty queue and a boolean array visited of size V
+    Create a parent array of size V and initialize all elements to -1
+    Enqueue the start node v1 into the queue and mark it as visited
+    WHILE the queue is not empty
+        Dequeue a node from the queue
+        IF the dequeued node is equal to v2
+            Build and return the path using the parent array
+        FOR each neighbor of the dequeued node
+            IF the neighbor is not visited
+                Enqueue the neighbor into the queue, mark it as visited, and update its parent
+    Return an empty vector if no path is found
+
+
+
+ 
+Certainly! Here's the pseudocode, algorithm, and a C++ code snippet for a function that uses BFS to find the path between two nodes v1 and v2 in a graph:
+
+Pseudocode:
+
+plaintext
+Copy code
+FUNCTION getPath(V, E, a, b, v1, v2)
+    Create an adjacency list to represent the graph
+    FOR i from 0 to E - 1
+        Add edge a[i] to b[i] in the adjacency list
+        Add edge b[i] to a[i] in the adjacency list
+    Initialize an empty queue and a boolean array visited of size V
+    Create a parent array of size V and initialize all elements to -1
+    Enqueue the start node v1 into the queue and mark it as visited
+    WHILE the queue is not empty
+        Dequeue a node from the queue
+        IF the dequeued node is equal to v2
+            Build and return the path using the parent array
+        FOR each neighbor of the dequeued node
+            IF the neighbor is not visited
+                Enqueue the neighbor into the queue, mark it as visited, and update its parent
+    Return an empty vector if no path is found
+Algorithm:
+
+Create an adjacency list to represent the graph.
+Iterate through the edges and add them to the adjacency list.
+Initialize a queue, a boolean array for visited nodes, and a parent array.
+Enqueue the start node v1 into the queue and mark it as visited.
+While the queue is not empty, dequeue a node.
+If the dequeued node is equal to v2, build and return the path using the parent array.
+For each neighbor of the dequeued node, enqueue it if not visited, mark it as visited, and update its parent.
+If no path is found, return an empty vector.
+
+
+
+
+ c++ code 
+ #include <bits/stdc++.h> 
+vector<int> getPath(int V, int E, vector<int> a, vector<int> b, int v1, int v2) {
+    //    Write your code here
+    vector<vector<int>> adj(V);
+
+    for(int i=0;i<E;i++){
+        adj[a[i]].push_back(b[i]);
+        adj[b[i]].push_back(a[i]);
+
+    }
+
+    vector<bool>visited(V,false);
+    vector<int> parent(V,-1);
+    queue<int>q;
+    q.push(v1);
+    visited[v1]=true;
+
+    while(!q.empty()){
+        int node = q.front();
+        q.pop();
+
+        if(node == v2){
+            vector<int> path;
+            
+            while(node != -1){
+                path.push_back(node);
+                node = parent[node];
+            }
+            return path;
+        }
+
+       for (int neighbor : adj[node]) {
+            if (!visited[neighbor]) {
+                q.push(neighbor);
+                visited[neighbor] = true;
+                parent[neighbor] = node;
+            }
+        }
+    }
+
+    return vector<int>();
+
+    
+}
+
+
+
+Java code 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class GraphPathFinder {
+    public static ArrayList<Integer> getPath(int V, int E, ArrayList<Integer> a, ArrayList<Integer> b, int v1, int v2) {
+        // Write your code here
+        ArrayList<ArrayList<Integer>> adj = new ArrayList<>(V);
+
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < E; i++) {
+            adj.get(a.get(i)).add(b.get(i));
+            adj.get(b.get(i)).add(a.get(i));
+        }
+
+        boolean[] visited = new boolean[V];
+        int[] parent = new int[V];
+        for (int i = 0; i < V; i++) {
+            parent[i] = -1;
+        }
+
+        Queue<Integer> q = new LinkedList<>();
+        q.add(v1);
+        visited[v1] = true;
+
+        while (!q.isEmpty()) {
+            int node = q.poll();
+
+            if (node == v2) {
+                ArrayList<Integer> path = new ArrayList<>();
+
+                while (node != -1) {
+                    path.add(node);
+                    node = parent[node];
+                }
+                Collections.reverse(path);
+                return path;
+            }
+
+            for (int neighbor : adj.get(node)) {
+                if (!visited[neighbor]) {
+                    q.add(neighbor);
+                    visited[neighbor] = true;
+                    parent[neighbor] = node;
+                }
+            }
+        }
+
+        return new ArrayList<>();
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        int V = 6;
+        int E = 5;
+        ArrayList<Integer> a = new ArrayList<>(List.of(0, 0, 1, 1, 2));
+        ArrayList<Integer> b = new ArrayList<>(List.of(1, 2, 3, 4, 5));
+        int v1 = 0;
+        int v2 = 4;
+
+        ArrayList<Integer> path = getPath(V, E, a, b, v1, v2);
+
+        if (!path.isEmpty()) {
+            System.out.print("Path from " + v1 + " to " + v2 + ": ");
+            for (int node : path) {
+                System.out.print(node + " ");
+            }
+            System.out.println();
+        } else {
+            System.out.println("No path found.");
+        }
+    }
+}
+
+ 
